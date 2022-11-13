@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Question 8</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+  <link rel="stylesheet" href="css/viz.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div id="vis"/>
+    <script>
+      const spec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+      "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
+    },
+    "encoding": {
+      "x": {"timeUnit": "yearmonth", "field": "Time Serie"},
+      "tooltip": [
+        {"timeUnit": "yearmonth", "field": "Time Serie"},
+        {"field": "INDIA_cdf", "type": "quantitative", "aggregate": "mean"},
+        {"field": "EU_cdf", "type": "quantitative", "aggregate": "mean"}
+      ]
+    },
+    "layer": [
+      {
+        "mark": {"type": "line", "color": "steelblue"},
+        "encoding": {
+          "y": {"field": "INDIA_cdf", "type": "quantitative", "aggregate": "mean"}
+        }
+      },
+      {
+        "mark": {"type": "line", "color": "darkorange"},
+        "encoding": {
+          "y": {
+            "field": "EU_cdf",
+            "type": "quantitative",
+            "aggregate": "mean",
+            "title": "Exchange Rate"
+          }
+        }
+      },
+      {
+        "mark": "rule",
+        "params": [
+          {"name": "hover", "select": {"type": "point", "on": "mouseover"}}
+        ],
+        "encoding": {
+          "color": {
+            "condition": {"param": "hover", "empty": false, "value": "black"},
+            "value": "transparent"
+          }
+        }
+      }
+    ],
+    "config": {"axisY": {"minExtent": 30}}
+    };
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    </script>
+    <div class="logo">
+      <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
+    </div>
+  </div>
+</body>
+</html>

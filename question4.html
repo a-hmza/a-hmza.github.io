@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Question 4</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+  <link rel="stylesheet" href="css/viz.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div id="vis"/>
+      <script>
+        const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "data": {
+        "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
+      },
+      "mark": "line",
+      "encoding": {
+        "x": {"field": "Time Serie", "type": "temporal", "timeUnit": "yearmonth"},
+        "y": {"aggregate": "mean", "field": "EU/US", "type": "quantitative"}
+      },
+      "config": {}
+      };
+      vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+      </script>
+      <div class="logo">
+        <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
+      </div>
+  </div>
+</body>
+</html>
