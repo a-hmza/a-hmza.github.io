@@ -12,38 +12,39 @@
   <div class="wrapper">
     <div id="vis"/>
       <script>
-          const spec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "title": "Hong Kong exchange rate from 2000 to 2020.",
-        "data": {
-          "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv"
-        },
-        "width": 500,
-        "height": 500,
-        "transform": [
-          {
-            "filter": {
-              "timeUnit": "year",
-              "field": "Time Serie",
-              "range": [2000, 2020]
-            }
+        const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": "Hong Kong exchange rate from 2000 to 2020.",
+      "data": {
+        "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv"
+      },
+      "width": 500,
+      "height": 500,
+      "transform": [
+        {
+          "filter": {
+            "timeUnit": "year",
+            "field": "Time Serie",
+            "range": [2000, 2020]
           }
-        ],
-        "mark": {
-          "type": "line",
-          "strokeWidth": 7,
-          "interpolate": "step-after",
-          "stroke": "maroon",
-          "strokeOpacity": 0.5
-        },
-        "encoding": {
-          "x": {"field": "Time Serie", "type": "temporal", "timeUnit": "year"},
-          "y": {"field": "HNGK_pct", "type": "quantitative"}
-        },
-        "config": {}
-        };
-          vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-        </script>
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "strokeWidth": 7,
+        "interpolate": "step-after",
+        "color": "plum",
+        "stroke": "powderblue",
+        "strokeOpacity": 0.2
+      },
+      "encoding": {
+        "x": {"field": "Time Serie", "type": "temporal", "timeUnit": "year"},
+        "y": {"field": "HNGK_pct", "type": "quantitative", "title": "Avg. HongKong % Change",}
+      },
+      "config": {}
+      };
+        vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+      </script>
     <div class="logo">
       <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
     </div>
