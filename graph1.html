@@ -13,75 +13,52 @@
     <div id="vis"/>
       <script>
     const spec = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "data": {
-    "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv",
-    "format": {"type": "csv"}
+    "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
   },
-  "title": "Average Percentage Change of Korean WON (₩) vs USD ($)",
-  "transform": [
+  "encoding": {
+    "x": {"timeUnit": "yearmonth", "field": "Time Serie"},
+    "tooltip": [
+      {"timeUnit": "yearmonth", "field": "Time Serie"},
+      {"field": "INDIA_cdf", "type": "quantitative", "aggregate": "mean"},
+      {"field": "EU_cdf", "type": "quantitative", "aggregate": "mean"}
+    ]
+  },
+  "layer": [
     {
-      "filter": {
-        "timeUnit": "year",
-        "field": "Time Serie",
-        "range": [2010, 2020]
-      }
-    }
-  ],
-  "vconcat": [
-    {
-      "width": 480,
-      "mark": "area",
+      "mark": {"type": "rule", "color": "skyblue"},
       "encoding": {
-        "x": {
-          "field": "Time Serie",
-          "type": "temporal",
-          "scale": {"domain": {"selection": "brush"}},
-          "axis": {"title": ""}
-        },
-        "y": {
-          "field": "KOR_pct",
-          "title": "Avg. Kor % Change",
-          "type": "quantitative",
-          "aggregate": "mean"
-        },
-        "color": {"value": "hotpink"}
+        "y": {"field": "INDIA_cdf", "type": "quantitative", "aggregate": "mean"}
       }
     },
     {
-      "width": 480,
-      "height": 60,
-      "mark": "area",
-      "selection": {
-        "brush": {
-          "type": "interval",
-          "encodings": ["x"],
-          "on": "[mousedown, window:mouseup] > window:mousemove!",
-          "translate": "[mousedown, window:mouseup] > window:mousemove!",
-          "zoom": "wheel!",
-          "mark": {"fill": "#333", "fillOpacity": 0.125, "stroke": "white"},
-          "resolve": "global"
-        }
-      },
+      "mark": {"type": "rule", "color": "peru"},
       "encoding": {
-        "x": {
-          "field": "Time Serie",
-          "type": "temporal",
-          "title": "Date",
-          "axis": {"format": "%Y"}
-        },
         "y": {
-          "field": "KOR_pct",
-          "title": "Avg. Kor % Change",
+          "field": "EU_cdf",
           "type": "quantitative",
-          "axis": {"tickCount": 3, "grid": false},
-          "aggregate": "mean"
-        },
-        "color": {"value": "hotpink"}
+          "aggregate": "mean",
+          "title": "Exchange Rate"
+        }
+      }
+    },
+    {
+      "mark": "rect",
+      "params": [
+        {"name": "hover", "select": {"type": "point", "on": "mouseover"}}
+      ],
+      "encoding": {
+        "color": {
+          "condition": {"param": "hover", "empty": false, "value": "black"},
+          "value": "transparent"
+        }
       }
     }
   ],
-  "config": {}
+  "config": {"axisY": {"minExtent": 30}}
 };
     vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
   </script>
