@@ -11,62 +11,80 @@
 <body>
   <div class="wrapper">
     <div id="vis"/>
-    <script>
-      const spec = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "data": {
-      "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
-    },
-    "repeat": {
-      "row": ["Horsepower", "Acceleration", "Miles_per_Gallon"],
-      "column": ["Miles_per_Gallon", "Acceleration", "Horsepower"]
-    },
-    "spec": {
-      "data": {"url": "data/cars.json"},
-      "mark": "point",
-      "params": [
-        {
-          "name": "brush",
-          "select": {
-            "type": "interval",
-            "resolve": "union",
-            "on": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-            "translate": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-            "zoom": "wheel![event.shiftKey]"
-          }
-        },
-        {
-          "name": "grid",
-          "select": {
-            "type": "interval",
-            "resolve": "global",
-            "translate": "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove!",
-            "zoom": "wheel![!event.shiftKey]"
-          },
-          "bind": "scales"
-        }
-      ],
-      "encoding": {
-        "x": {"field": {"repeat": "column"}, "type": "quantitative"},
-        "y": {
-          "field": {"repeat": "row"},
-          "type": "quantitative",
-          "axis": {"minExtent": 30}
-        },
-        "color": {
-          "condition": {
-            "param": "brush",
-            "field": "Origin",
-            "type": "nominal"
-          },
-          "value": "grey"
-        }
+      <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv",
+    "format": {"type": "csv"}
+  },
+  "title": "Average Percentage Change of Korean WON (₩) vs USD ($)",
+  "transform": [
+    {
+      "filter": {
+        "timeUnit": "year",
+        "field": "Time Serie",
+        "range": [2010, 2020]
       }
     }
-  }
-
+  ],
+  "vconcat": [
+    {
+      "width": 480,
+      "mark": "area",
+      "encoding": {
+        "x": {
+          "field": "Time Serie",
+          "type": "temporal",
+          "scale": {"domain": {"selection": "brush"}},
+          "axis": {"title": ""}
+        },
+        "y": {
+          "field": "KOR_pct",
+          "title": "Avg. Kor % Change",
+          "type": "quantitative",
+          "aggregate": "mean"
+        },
+        "color": {"value": "hotpink"}
+      }
+    },
+    {
+      "width": 480,
+      "height": 60,
+      "mark": "area",
+      "selection": {
+        "brush": {
+          "type": "interval",
+          "encodings": ["x"],
+          "on": "[mousedown, window:mouseup] > window:mousemove!",
+          "translate": "[mousedown, window:mouseup] > window:mousemove!",
+          "zoom": "wheel!",
+          "mark": {"fill": "#333", "fillOpacity": 0.125, "stroke": "white"},
+          "resolve": "global"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "Time Serie",
+          "type": "temporal",
+          "title": "Date",
+          "axis": {"format": "%Y"}
+        },
+        "y": {
+          "field": "KOR_pct",
+          "title": "Avg. Kor % Change",
+          "type": "quantitative",
+          "axis": {"tickCount": 3, "grid": false},
+          "aggregate": "mean"
+        },
+        "color": {"value": "hotpink"}
+      }
+    }
+  ],
+  "config": {}
+};
     vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-    </script>
+  </script>
     <div class="logo">
       <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
     </div>
