@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Question 8</title>
+  <title>P4|Graph 3</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
@@ -11,62 +11,91 @@
 <body>
   <div class="wrapper">
     <div id="vis"/>
-    <script>
-      const spec = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "data": {
-      "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
-    },
-    "repeat": {
-      "row": ["Horsepower", "Acceleration", "Miles_per_Gallon"],
-      "column": ["Miles_per_Gallon", "Acceleration", "Horsepower"]
-    },
-    "spec": {
-      "data": {"url": "data/cars.json"},
-      "mark": "point",
-      "params": [
+      <script>
+        const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "A bar chart with negative values. We can hide the axis domain line, and instead use a conditional grid color to draw a zero baseline.",
+      "data": {
+        "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
+      },
+      "width": 800,
+      "height": 500,
+      "title": "Average Percentage Change of UK and EU vs US Dollars per Year",
+      "transform": [
         {
-          "name": "brush",
-          "select": {
-            "type": "interval",
-            "resolve": "union",
-            "on": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-            "translate": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-            "zoom": "wheel![event.shiftKey]"
+          "filter": {
+            "timeUnit": "year",
+            "field": "Time Serie",
+            "range": [2010, 2020]
+          }
+        }
+      ],
+      "layer": [
+        {
+          "mark": {"type": "bar", "tooltip": true},
+          "encoding": {
+            "x": {
+              "field": "Time Serie",
+              "type": "temporal",
+              "timeUnit": "year",
+              "title": "Year",
+              "axis": {
+                "domain": false,
+                "ticks": false,
+                "labelAngle": 0,
+                "labelPadding": 10
+              }
+            },
+            "y": {
+              "field": "UK_pct",
+              "type": "quantitative",
+              "aggregate": "mean",
+              "title": "Average Percentage Change",
+              "axis": {
+                "gridColor": {
+                  "condition": {"test": "datum.value === 0", "value": "black"},
+                  "value": "#e9e9e9"
+                }
+              }
+            }
           }
         },
         {
-          "name": "grid",
-          "select": {
-            "type": "interval",
-            "resolve": "global",
-            "translate": "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove!",
-            "zoom": "wheel![!event.shiftKey]"
-          },
-          "bind": "scales"
+          "mark": {"type": "bar", "tooltip": true},
+          "encoding": {
+            "x": {
+              "field": "Time Serie",
+              "type": "temporal",
+              "timeUnit": "year",
+              "title": "Year",
+              "axis": {
+                "domain": false,
+                "ticks": false,
+                "labelAngle": 0,
+                "labelPadding": 10
+              }
+            },
+            "y": {
+              "field": "EU_pct",
+              "type": "quantitative",
+              "aggregate": "mean",
+              "title": "Average Percentage Change",
+              "axis": {
+                "gridColor": {
+                  "condition": {"test": "datum.value === 0", "value": "black"},
+                  "value": "#e9e9e9"
+                }
+              }
+            },
+            "color": {"value": "#e45755"},
+            "opacity": {"value": 0.7}
+          }
         }
       ],
-      "encoding": {
-        "x": {"field": {"repeat": "column"}, "type": "quantitative"},
-        "y": {
-          "field": {"repeat": "row"},
-          "type": "quantitative",
-          "axis": {"minExtent": 30}
-        },
-        "color": {
-          "condition": {
-            "param": "brush",
-            "field": "Origin",
-            "type": "nominal"
-          },
-          "value": "grey"
-        }
-      }
-    }
-  }
-
-    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-    </script>
+      "config": {}
+     };
+        vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+      </script>
     <div class="logo">
       <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
     </div>
