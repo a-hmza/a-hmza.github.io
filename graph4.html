@@ -11,40 +11,56 @@
 <body>
   <div class="wrapper">
     <div id="vis"/>
-      <script>
-        const spec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "title": "Hong Kong exchange rate from 2000 to 2020.",
-      "data": {
-        "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv"
-      },
-      "width": 500,
-      "height": 500,
-      "transform": [
-        {
-          "filter": {
-            "timeUnit": "year",
-            "field": "Time Serie",
-            "range": [2000, 2020]
-          }
-        }
-      ],
-      "mark": {
-        "type": "circle",
-        "strokeWidth": 7,
-        "interpolate": "step-after",
-        "color": "plum",
-        "stroke": "powderblue",
-        "strokeOpacity": 0.2
-      },
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Intro to Viz Final Exam",
+  "data": {
+    "url": "https://raw.githubusercontent.com/a-hmza/a-hmza.github.io/main/Foreign_Exchange_Rates.csv"
+  },
+  "vconcat": [
+    {
       "encoding": {
-        "x": {"field": "Time Serie", "type": "temporal", "timeUnit": "year"},
-        "y": {"field": "HNGK_pct", "type": "quantitative", "title": "Avg. HongKong % Change"}
+        "color": {
+          "condition": {
+            "param": "select1",
+            "field": "Time Seire",
+            "type": "temporal"
+          },
+          "value": "lightgray"
+        },
+        "x": {"field": "UK_CDF", "type": "quantitative"},
+        "y": {"field": "AUS_CDF", "type": "quantitative"}
       },
-      "config": {}
-      };
-        vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-      </script>
+      "width": 600,
+      "height": 300,
+      "mark": "point",
+      "params": [
+        {"name": "select1", "select": {"type": "interval", "encodings": ["x"]}}
+      ],
+      "transform": [{"filter": {"param": "select2"}}]
+    },
+    {
+      "encoding": {
+        "color": {
+          "condition": {"param": "select2", "field": "weather"},
+          "value": "lightgray"
+        },
+        "x": {"field": "Time Serie", "type": "temporal", "timeUnit": "year"},
+        "y": {"title": "Count of Records", "field": "quantitative"}
+      },
+      "width": 600,
+      "mark": "bar",
+      "params": [
+        {"name": "select2", "select": {"type": "point", "encodings": ["color"]}}
+      ],
+      "transform": [{"filter": {"param": "select1"}}]
+    }
+  ],
+  "config": {}
+};
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
     <div class="logo">
       <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
     </div>
