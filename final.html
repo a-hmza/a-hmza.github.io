@@ -11,66 +11,54 @@
 <body>
   <div class="wrapper">
     <div id="vis"/>
-      <script>
+  <script>
     const spec = {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "repeat": {
-    "row": ["EU_pct", "INDIA_pct", "SRLNK_pct", "UK_pct"],
-    "column": ["EU_pct", "INDIA_pct", "SRLNK_pct", "UK_pct"]
+  "title": "Intro to Viz Final Exam",
+  "data": {
+    "url": "https://raw.githubusercontent.com/a-hmza/a-hmza.github.io/main/Foreign_Exchange_Rates.csv"
   },
-  "spec": {
-    "data": {
-      "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
-    },
-    "layer": [
-      {
-        "mark": "point",
-        "params": [
-          {
-            "name": "brush",
-            "select": {
-              "type": "interval",
-              "resolve": "union",
-              "on": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
-              "zoom": "wheel![event.shiftKey]"
-            }
+  "vconcat": [
+    {
+      "encoding": {
+        "color": {
+          "condition": {
+            "param": "select1",
+            "field": "Time Seire",
+            "type": "temporal"
           },
-          {
-            "name": "grid",
-            "select": {
-              "type": "interval",
-              "resolve": "global",
-              "translate": "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove!",
-              "zoom": "wheel![!event.shiftKey]"
-            },
-            "bind": "scales"
-          }
-        ],
-        "encoding": {
-          "x": {"field": {"repeat": "column"}, "type": "quantitative"},
-          "y": {
-            "field": {"repeat": "row"},
-            "type": "quantitative",
-            "axis": {"minExtent": 30}
-          },
-          "color": {
-            "condition": {"param": "brush", "type": "nominal"},
-            "value": "grey"
-          }
-        }
+          "value": "lightgray"
+        },
+        "x": {"field": "UK_CDF", "type": "quantitative"},
+        "y": {"field": "AUS_CDF", "type": "quantitative"}
       },
-      {
-        "mark": {"type": "line", "color": "purple"},
-        "transform": [{"regression": "EU_pct", "on": "UK_pct"}],
-        "encoding": {
-          "y": {"field": "EU_pct", "type": "quantitative"},
-          "x": {"field": "UK_pct", "type": "quantitative"}
-        }
-      }
-    ]
-  },
+      "width": 600,
+      "height": 300,
+      "mark": "point",
+      "params": [
+        {"name": "select1", "select": {"type": "interval", "encodings": ["x"]}}
+      ],
+      "transform": [{"filter": {"param": "select2"}}]
+    },
+    {
+      "encoding": {
+        "color": {
+          "condition": {"param": "select2", "field": "weather"},
+          "value": "lightgray"
+        },
+        "x": {"field": "Time Serie", "type": "temporal", "timeUnit": "year"},
+        "y": {"title": "Count of Records", "field": "quantitative"}
+      },
+      "width": 600,
+      "mark": "bar",
+      "params": [
+        {"name": "select2", "select": {"type": "point", "encodings": ["color"]}}
+      ],
+      "transform": [{"filter": {"param": "select1"}}]
+    }
+  ],
   "config": {}
-  };
+};
     vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
   </script>
 
