@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HAMZA | FINAL</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+  <link rel="stylesheet" href="css/viz.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div id="vis"/>
+      <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "repeat": {
+    "row": ["EU_pct", "INDIA_pct", "SRLNK_pct", "UK_pct"],
+    "column": ["EU_pct", "INDIA_pct", "SRLNK_pct", "UK_pct"]
+  },
+  "spec": {
+    "data": {
+      "url": "https://raw.githubusercontent.com/aethla/data-viz/main/Foreign_Exchange_Rates_Edited.csv.csv"
+    },
+    "layer": [
+      {
+        "mark": "point",
+        "params": [
+          {
+            "name": "brush",
+            "select": {
+              "type": "interval",
+              "resolve": "union",
+              "on": "[mousedown[event.shiftKey], window:mouseup] > window:mousemove!",
+              "zoom": "wheel![event.shiftKey]"
+            }
+          },
+          {
+            "name": "grid",
+            "select": {
+              "type": "interval",
+              "resolve": "global",
+              "translate": "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove!",
+              "zoom": "wheel![!event.shiftKey]"
+            },
+            "bind": "scales"
+          }
+        ],
+        "encoding": {
+          "x": {"field": {"repeat": "column"}, "type": "quantitative"},
+          "y": {
+            "field": {"repeat": "row"},
+            "type": "quantitative",
+            "axis": {"minExtent": 30}
+          },
+          "color": {
+            "condition": {"param": "brush", "type": "nominal"},
+            "value": "grey"
+          }
+        }
+      },
+      {
+        "mark": {"type": "line", "color": "purple"},
+        "transform": [{"regression": "EU_pct", "on": "UK_pct"}],
+        "encoding": {
+          "y": {"field": "EU_pct", "type": "quantitative"},
+          "x": {"field": "UK_pct", "type": "quantitative"}
+        }
+      }
+    ]
+  },
+  "config": {}
+  };
+    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+  </script>
+
+    <div class="logo">
+      <a href="index.html"><img id="buid" src="media/logo.png" alt="BUID LOGO" title="Home"></a>
+    </div>
+  </div>
+</body>
+</html>
